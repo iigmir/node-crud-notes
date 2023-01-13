@@ -1,5 +1,6 @@
 import express from "express";
 import mysql from "mysql";
+import BodyParser from "body-parser";
 // Routes
 import DbRoutes from "./api/db.js";
 import UsersRoutes from "./api/users.js";
@@ -17,7 +18,8 @@ connection.connect();
 
 const RootRoute = (req, res) => { res.jsonp({ message: "Hello World" }); };
 
-server.use(express.urlencoded({ extended: true }));
+server.use(BodyParser.urlencoded({ extended: false }));
+server.use(BodyParser.json());
 
 server.use("/", express.static("static"));
 server.get("/api/", RootRoute);

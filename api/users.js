@@ -30,8 +30,9 @@ export default connection => express.Router()
             const values = `VALUES (NULL, ${birthdate}, ${gender}, ${name}, ${address})`;
             return action + values;
         };
-        const inputs = req.body;
-        res.jsonp({ inputs });
+        const name = req.body.name;
+        const inputs  = req.body;
+        res.jsonp({ name, inputs });
         // post_action(connection)
         // connection.query( "SELECT name, gender, birthdate FROM `my_hw`", cb );
     })

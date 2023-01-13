@@ -23,5 +23,8 @@ user_form.addEventListener("submit", (event) => {
     }).then( json_format );
     ajax.then( res => {
         document.querySelector("#response-status").innerText = res.message;
+        window.setTimeout( () => {
+            document.querySelector("#response-status").innerText = "";
+        }, 5000);
     });
 });

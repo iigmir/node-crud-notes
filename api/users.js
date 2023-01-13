@@ -22,15 +22,16 @@ const get_action = connection => (req, res) => {
     connection.query( "SELECT name, gender, birthdate FROM `my_hw`", cb );
 };
 
-export default connection => express.Router()
-    .get( "/", get_action(connection) )
-    .post( "/", (req, res) => {
+const post_action = (connection) => {
+    return (req, res) => {
         const get_command = (name, birthdate, gender, address) => {
             const action = "INSERT INTO `my_hw` (`id`, `name`, `birthdate`, `gender`, `address`) ";
             const values = `VALUES (NULL, "${name}", "${birthdate}", ${gender}, "${address}")`;
             return action + values;
         };
-        const cb = (error, results, fields) => {
+        const { name, birthdate, gender, address } = req.body;
+        const command = get_command(name, birthdate, gender, address);
+        connection.query(command, (error, results) => {
             if (error) {
                 // throw error
                 res.statusCode = 400;
@@ -40,12 +41,11 @@ export default connection => express.Router()
             res.statusCode = 200;
             res.jsonp({ message: "Success", payload: results });
             return;
-        };
-        const { name, birthdate, gender, address }  = req.body;
-        const command = get_command( name, birthdate, gender, address );
-        const message = "received";
-        // res.jsonp({ command, message });
-        // post_action(connection)
-        connection.query( command, cb );
-    })
+        });
+    };
+}
+
+export default connection => express.Router()
+    .get( "/", get_action(connection) )
+    .post( "/", post_action(connection) )
 ;

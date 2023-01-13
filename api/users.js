@@ -1,5 +1,13 @@
 import express from "express";
 
+const generate_gender = (input = 0) => {
+    switch (input) {
+        case 1: return "male";
+        case 2: return "female";
+        default: return "non-binary";
+    }
+};
+
 /**
  * @param {import("mysql").Connection} connection
  * @returns
@@ -11,15 +19,7 @@ const get_action = connection => (req, res) => {
      * @param {*} fields
      */
     const cb = function (error, results, fields) {
-        if (error)
-            throw error;
-        const generate_gender = (input = 0) => {
-            switch (input) {
-                case 1: return "male";
-                case 2: return "female";
-                default: return "non-binary";
-            }
-        };
+        if (error) throw error;
         const users = results.map( ({ gender, ...rest }) => ({ gender: generate_gender(gender), ...rest }) );
         res.jsonp(users);
     };
@@ -64,7 +64,6 @@ const post_action = (connection) => {
             res.statusCode = 400;
             res.jsonp({ message: "User existed", payload: user });
         });
-        //
     };
 }
 
@@ -75,4 +74,15 @@ const post_action = (connection) => {
 export default connection => express.Router()
     .get( "/", get_action(connection) )
     .post( "/", post_action(connection) )
+    .get( "/:user", (req, res) => {
+        const command = `SELECT name, gender, birthdate FROM my_hw WHERE name="${req.params.user}"`;
+        const cb = function (error, results, fields) {
+            if (error)
+                throw error;
+
+            const users = results.map( ({ gender, ...rest }) => ({ gender: generate_gender(gender), ...rest }) );
+            res.jsonp(users);
+        };
+        connection.query( command, cb );
+    })
 ;

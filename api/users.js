@@ -22,13 +22,6 @@ const get_action = connection => (req, res) => {
     connection.query( "SELECT name, gender, birthdate FROM `my_hw`", cb );
 };
 
-// POST
-// INSERT INTO `my_hw` (`id`, `name`, `birthdate`, `gender`, `address`) VALUES (NULL, name, birthdate, gender, address);
-const post_action = connection => (req, res) => {
-    // post_action(connection)
-    // connection.query( "SELECT name, gender, birthdate FROM `my_hw`", cb );
-};
-
 export default connection => express.Router()
     .get( "/", get_action(connection) )
     .post( "/", (req, res) => {

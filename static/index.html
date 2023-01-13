@@ -7,35 +7,24 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
     <link rel="icon" href="data:," />
+    <link rel="stylesheet" href="https://unpkg.com/7.css" />
 </head>
 
 <body>
-    <h1 id="main-title"></h1>
-    <form id="user-form" action="/api/users" method="post" class="form-example">
-        <div class="form-example">
-            <label for="name">Enter your name: </label>
-            <input type="text" name="name" value="default-user" required />
+    <h3 id="main-title"></h3>
+    <div class="window" style="max-width: 640px">
+        <div class="title-bar">
+            <div class="title-bar-text">THE FORM</div>
         </div>
-        <div class="form-example">
-            <label for="name">Enter your birthdate: </label>
-            <input type="date" name="birthdate" value="1990-10-10" required />
+        <div class="window-body has-space">
+
         </div>
-        <div class="form-example">
-            <label for="name">Enter your gender: </label>
-            <select name="gender">
-                <option value="0">Non-Binary</option>
-                <option value="1">Male</option>
-                <option value="2">Female</option>
-            </select>
+        <div class="status-bar">
+            <p class="status-bar-field">Press F1 for help</p>
+            <p class="status-bar-field">Slide 1</p>
+            <p class="status-bar-field">CPU Usage: 14%</p>
         </div>
-        <div class="form-example">
-            <label for="name">Enter your address: </label>
-            <input type="text" name="address" value="Whatever" />
-        </div>
-        <div class="form-example">
-            <input type="submit" value="Subscribe!" />
-        </div>
-    </form>
+    </div>
     <p id="response-status"></p>
     <script src="./index.js"></script>
 </body>

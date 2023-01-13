@@ -3,7 +3,7 @@ const json_format = r => r.json();
 const main = () => {
     const ajax = fetch("/api").then(json_format);
     ajax.then( res => {
-        document.querySelector("h1").innerText = res.message;
+        document.querySelector("#main-title").innerText = res.message;
     });
 };
 

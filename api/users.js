@@ -33,7 +33,7 @@ const get_action = connection => (req, res) => {
 const post_action = (connection) => {
     return (req, res) => {
         const { name, birthdate, gender, address } = req.body;
-        const check_command = `SELECT COUNT(id) AS id FROM my_hw WHERE name="${name}";`;
+        const check_command = `SELECT COUNT(id) AS length FROM my_hw WHERE name="${name}";`;
         const success_action = (error, results) => {
             if (error) {
                 // throw error
@@ -51,7 +51,7 @@ const post_action = (connection) => {
                 res.jsonp({ message: "Error", payload: error });
                 return;
             };
-            if( user.length < 1 ) {
+            if( user[0].length < 1 ) {
                 const get_insert_command = (name, birthdate, gender, address) => {
                     const action = "INSERT INTO `my_hw` (`id`, `name`, `birthdate`, `gender`, `address`) ";
                     const values = `VALUES (NULL, "${name}", "${birthdate}", ${gender}, "${address}")`;
@@ -62,7 +62,7 @@ const post_action = (connection) => {
                 return;
             }
             res.statusCode = 400;
-            res.jsonp({ message: "User existed", payload: user.length });
+            res.jsonp({ message: "User existed", payload: user });
         });
         //
     };

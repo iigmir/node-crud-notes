@@ -27,15 +27,17 @@ export default connection => express.Router()
     .post( "/", (req, res) => {
         const get_command = (name, birthdate, gender, address) => {
             const action = "INSERT INTO `my_hw` (`id`, `name`, `birthdate`, `gender`, `address`) ";
-            const values = `VALUES (NULL, ${birthdate}, ${gender}, ${name}, ${address})`;
+            const values = `VALUES (NULL, "${name}", "${birthdate}", ${gender}, "${address}")`;
             return action + values;
         };
         const cb = (error, results, fields) => {
             if (error) {
                 // throw error
+                res.statusCode = 400;
                 res.jsonp({ message: "Error", payload: error });
                 return;
             };
+            res.statusCode = 200;
             res.jsonp({ message: "Success", payload: results });
             return;
         };

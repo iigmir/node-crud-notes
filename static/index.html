@@ -17,7 +17,32 @@
             <div class="title-bar-text">THE FORM</div>
         </div>
         <div class="window-body has-space">
-
+            <form id="user-form" action="/api/users" method="post" class="form-example">
+                <div class="form-example">
+                    <label for="name">Enter your name:
+                        <input type="text" name="name" value="default-user" required />
+                    </label>
+                </div>
+                <div class="form-example">
+                    <label for="name">Enter your birthdate: </label>
+                    <input type="date" name="birthdate" value="1990-10-10" required />
+                </div>
+                <div class="form-example">
+                    <label for="name">Enter your gender: </label>
+                    <select name="gender">
+                        <option value="0">Non-Binary</option>
+                        <option value="1">Male</option>
+                        <option value="2">Female</option>
+                    </select>
+                </div>
+                <div class="form-example">
+                    <label for="name">Enter your address: </label>
+                    <input type="text" name="address" value="Whatever" />
+                </div>
+                <div class="form-example">
+                    <input type="submit" value="Subscribe!" />
+                </div>
+            </form>
         </div>
         <div class="status-bar">
             <p class="status-bar-field">Press F1 for help</p>

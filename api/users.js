@@ -30,11 +30,20 @@ export default connection => express.Router()
             const values = `VALUES (NULL, ${birthdate}, ${gender}, ${name}, ${address})`;
             return action + values;
         };
+        const cb = (error, results, fields) => {
+            if (error) {
+                // throw error
+                res.jsonp({ message: "Error", payload: error });
+                return;
+            };
+            res.jsonp({ message: "Success", payload: results });
+            return;
+        };
         const { name, birthdate, gender, address }  = req.body;
         const command = get_command( name, birthdate, gender, address );
         const message = "received";
-        res.jsonp({ command, message });
+        // res.jsonp({ command, message });
         // post_action(connection)
-        // connection.query( "SELECT name, gender, birthdate FROM `my_hw`", cb );
+        connection.query( command, cb );
     })
 ;

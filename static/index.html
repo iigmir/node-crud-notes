@@ -18,18 +18,22 @@
         </div>
         <div class="form-example">
             <label for="name">Enter your birthdate: </label>
-            <input type="text" name="birthdate" value="1990-10-10" required />
+            <input type="date" name="birthdate" value="1990-10-10" required />
         </div>
         <div class="form-example">
             <label for="name">Enter your gender: </label>
-            <input type="text" name="gender" value="0" required />
+            <select name="gender">
+                <option value="0">Non-Binary</option>
+                <option value="1">Male</option>
+                <option value="2">Female</option>
+            </select>
         </div>
         <div class="form-example">
             <label for="name">Enter your address: </label>
-            <input type="text" name="address" value="Whatever" required />
+            <input type="text" name="address" value="Whatever" />
         </div>
         <div class="form-example">
-            <input type="submit" value="Subscribe!">
+            <input type="submit" value="Subscribe!" />
         </div>
     </form>
     <script src="./index.js"></script>

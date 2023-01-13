@@ -32,17 +32,8 @@ const get_action = connection => (req, res) => {
  */
 const post_action = (connection) => {
     return (req, res) => {
-        const get_check_command = (name) => {
-            return `SELECT COUNT(id) AS id FROM my_hw WHERE name="${name}";`;
-        };
-        const get_insert_command = (name, birthdate, gender, address) => {
-            const action = "INSERT INTO `my_hw` (`id`, `name`, `birthdate`, `gender`, `address`) ";
-            const values = `VALUES (NULL, "${name}", "${birthdate}", ${gender}, "${address}")`;
-            return action + values;
-        };
         const { name, birthdate, gender, address } = req.body;
-        const insert_command = get_insert_command(name, birthdate, gender, address);
-        const check_command = get_check_command(name);
+        const check_command = `SELECT COUNT(id) AS id FROM my_hw WHERE name="${name}";`;
         const success_action = (error, results) => {
             if (error) {
                 // throw error
@@ -60,12 +51,18 @@ const post_action = (connection) => {
                 res.jsonp({ message: "Error", payload: error });
                 return;
             };
-            if( user.length > 0 ) {
+            if( user.length < 1 ) {
+                const get_insert_command = (name, birthdate, gender, address) => {
+                    const action = "INSERT INTO `my_hw` (`id`, `name`, `birthdate`, `gender`, `address`) ";
+                    const values = `VALUES (NULL, "${name}", "${birthdate}", ${gender}, "${address}")`;
+                    return action + values;
+                };
+                const insert_command = get_insert_command(name, birthdate, gender, address);
                 connection.query(insert_command, success_action);
-            } else {
-                res.statusCode = 400;
-                res.jsonp({ message: "User existed", payload: user.length });
-            };
+                return;
+            }
+            res.statusCode = 400;
+            res.jsonp({ message: "User existed", payload: user.length });
         });
         //
     };

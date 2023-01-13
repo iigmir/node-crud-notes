@@ -1,6 +1,6 @@
 import express from "express";
 
-const get_act = connection => (req, res) => {
+const get_action = connection => (req, res) => {
     /**
      * @param {express.Request} error
      * @param {express.Response} results
@@ -24,5 +24,22 @@ const get_act = connection => (req, res) => {
 
 // POST
 // INSERT INTO `my_hw` (`id`, `name`, `birthdate`, `gender`, `address`) VALUES (NULL, name, birthdate, gender, address);
+const post_action = connection => (req, res) => {
+    // post_action(connection)
+    // connection.query( "SELECT name, gender, birthdate FROM `my_hw`", cb );
+};
 
-export default connection => express.Router().get( "/", get_act(connection) );
+export default connection => express.Router()
+    .get( "/", get_action(connection) )
+    .post( "/", (req, res) => {
+        const get_command = (name, birthdate, gender, address) => {
+            const action = "INSERT INTO `my_hw` (`id`, `name`, `birthdate`, `gender`, `address`) ";
+            const values = `VALUES (NULL, ${birthdate}, ${gender}, ${name}, ${address})`;
+            return action + values;
+        };
+        const inputs = req.body;
+        res.jsonp({ inputs });
+        // post_action(connection)
+        // connection.query( "SELECT name, gender, birthdate FROM `my_hw`", cb );
+    })
+;

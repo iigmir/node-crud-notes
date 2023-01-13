@@ -15,12 +15,11 @@ const connection = mysql.createConnection({
 });
 connection.connect();
 
-server.use("/api/users", UsersRoutes(connection) );
-server.use("/api/db", DbRoutes(connection) );
+const RootRoute = (req, res) => { res.jsonp({ message: "Hello World" }); };
 
-server.get("/", (req, res) => {
-    res.jsonp({ message: "Hello World" });
-});
+server.get("/api/", RootRoute);
+server.use("/api/db", DbRoutes(connection) );
+server.use("/api/users", UsersRoutes(connection) );
 
 server.listen( port, () => {
     console.log(`Link: http://127.0.0.1:${port}`);

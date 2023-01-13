@@ -9,12 +9,16 @@ const main = () => {
 
 main();
 
-const form = document.querySelector("form#user-form");
-form.addEventListener("submit", (event) => {
+const user_form = document.querySelector("form#user-form");
+user_form.addEventListener("submit", (event) => {
     event.preventDefault();
-    const body = new FormData(event.target);
+    const form_dom = event.target;
+    const body = new FormData(form_dom);
     const ajax = fetch("/api/users", {
         method: "POST",
+        headers: {
+            "Content-Type": `${form_dom.enctype};charset=UTF-8`,
+        },
         body: body
     }).then( json_format );
     ajax.then( res => {

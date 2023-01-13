@@ -13,13 +13,12 @@ const user_form = document.querySelector("form#user-form");
 user_form.addEventListener("submit", (event) => {
     event.preventDefault();
     const form_dom = event.target;
-    const body = new FormData(form_dom);
     const ajax = fetch("/api/users", {
         method: "POST",
         headers: {
-            "Content-Type": `${form_dom.enctype};charset=UTF-8`,
+            "Content-Type": `application/x-www-form-urlencoded; charset=UTF-8`,
         },
-        body: body
+        body: new FormData(form_dom)
     }).then( json_format );
     ajax.then( res => {
         console.log(res);

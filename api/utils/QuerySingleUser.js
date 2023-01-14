@@ -14,6 +14,7 @@ class QuerySingleUser {
         this.connection = connection;
         this.name = name;
         this.data = [];
+        this.db = `my_hw`;
     }
     /**
      * Generate interface
@@ -52,7 +53,7 @@ class QuerySingleUser {
                 reject(this.connection);
                 return;
             }
-            this.connection.query(`SELECT * FROM my_hw WHERE name="${user}"`, (error, results, fields) => {
+            this.connection.query(`SELECT * FROM ${this.db} WHERE name="${user}"`, (error, results, fields) => {
                 if (error) {
                     reject( this.generate_response( 500, "Unknown error", error ) );
                 }
@@ -67,9 +68,34 @@ class QuerySingleUser {
     }
     put_user({ gender = 0, birthdate = null, address = null, }) {
         const id = this.data[0]?.id ?? null;
-        const gender_param = this.generate_gender_request(gender);
-        return { gender: gender_param, birthdate, address, id };
+        const generate_params = ({ gender = 0, birthdate = null, address = null, id = 0 }) => {
+            const params = {
+                id: id,
+                gender: this.generate_gender_request(gender),
+                birthdate: birthdate,
+                address: address,
+            };
+            return params;
+        };
+        /**
+         * `UPDATE `my_hw` SET `name` = 'AAAAAAAAAAAAAAAAA', `birthdate` = '2023-01-01', `gender` = '0', `address` = 'BBBBBBBBBBBBBBB' WHERE `my_hw`.`id` = 17`
+         */
+        const generate_command = (item = {}) => {
+            const not_id_or_name = (property = "id") => ["id", "name"].includes(property) === false;
+            const conditions = ([property, value]) => value != null && not_id_or_name(property);
+            const item_command = ([property, value]) => `\`${property}\` = ${value}`;
+            const map_array = Object.entries( item ).filter( conditions );
+            const commands = map_array.map( item_command ).join( "," );
+            return `UPDATE ${this.db} SET ${commands} WHERE ${this.db}.id = ${item.id}`;
+        };
+        return {
+            command: generate_command(
+                generate_params({ gender, birthdate, address, id })
+            )
+        };
     }
 }
 
 export default QuerySingleUser;
+
+

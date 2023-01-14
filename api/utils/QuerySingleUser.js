@@ -65,6 +65,11 @@ class QuerySingleUser {
             });
         });
     }
+    put_user({ gender = 0, birthdate = null, address = null, }) {
+        const id = this.data[0]?.id ?? null;
+        const gender_param = this.generate_gender_request(gender);
+        return { gender: gender_param, birthdate, address, id };
+    }
 }
 
 export default QuerySingleUser;

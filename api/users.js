@@ -93,10 +93,10 @@ function put_user_action(connection) {
         const ajax = new QuerySingleUser(connection, req.params.user);
         ajax.get_user_by_name(req.params.user).then( (results) => {
             res.statusCode = results.code;
-            res.jsonp({ results, datas });
-        }).catch( (e) => {
-            res.statusCode = e.code;
-            res.jsonp( e );
+            res.jsonp( ajax.put_user(datas) );
+        }).catch( (error) => {
+            res.statusCode = error.code;
+            res.jsonp( error );
         });
     };
 }
@@ -111,7 +111,7 @@ function delete_user_action(connection) {
         const ajax = new QuerySingleUser(connection, req.params.user);
         ajax.get_user_by_name(req.params.user).then( (results) => {
             res.statusCode = results.code;
-            res.jsonp({ results, datas });
+            res.jsonp( ajax.put_user(datas) );
         }).catch( (e) => {
             res.statusCode = e.code;
             res.jsonp( e );

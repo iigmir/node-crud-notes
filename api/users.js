@@ -68,7 +68,7 @@ const post_action = (connection) => {
 }
 
 
-function get_user_action(connection) {
+const get_user_action = (connection) => {
     return (req, res) => {
         const command = `SELECT name, gender, birthdate FROM my_hw WHERE name="${req.params.user}"`;
         const cb = function (error, results, fields) {
@@ -90,5 +90,27 @@ export default connection => express.Router()
     .get( "/", get_action(connection) )
     .post( "/", post_action(connection) )
     .get( "/:user", get_user_action(connection) )
+    .put( "/:user", (req, res) => {
+        const command = `SELECT name, gender, birthdate FROM my_hw WHERE name="${req.params.user}"`;
+        const cb = function (error, results, fields) {
+            if (error)
+                throw error;
+
+            const users = results.map(({ gender, ...rest }) => ({ gender: generate_gender(gender), ...rest }));
+            res.jsonp(users);
+        };
+        connection.query(command, cb);
+    } )
+    .delete( "/:user", (req, res) => {
+        const command = `SELECT name, gender, birthdate FROM my_hw WHERE name="${req.params.user}"`;
+        const cb = function (error, results, fields) {
+            if (error)
+                throw error;
+
+            const users = results.map(({ gender, ...rest }) => ({ gender: generate_gender(gender), ...rest }));
+            res.jsonp(users);
+        };
+        connection.query(command, cb);
+    } )
 ;
 

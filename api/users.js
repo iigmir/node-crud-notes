@@ -67,10 +67,10 @@ const post_action = (connection) => {
     };
 }
 
+// Single user (/api/users/:user) section
 
 const get_user_action = (connection) => {
     return (req, res) => {
-        const command = `SELECT name, gender, birthdate FROM my_hw WHERE name="${req.params.user}"`;
         const cb = function (error, results, fields) {
             if (error)
                 throw error;
@@ -78,7 +78,38 @@ const get_user_action = (connection) => {
             const users = results.map(({ gender, ...rest }) => ({ gender: generate_gender(gender), ...rest }));
             res.jsonp(users);
         };
-        connection.query(command, cb);
+        connection.query(`SELECT name, gender, birthdate FROM my_hw WHERE name="${req.params.user}"`, cb);
+    };
+}
+
+function put_user_action(connection) {
+    return (req, res) => {
+        const datas = {
+            gender: req.body.gender,
+            birthdate: req.body.birthdate,
+            address: req.body.address,
+        };
+        const cb = function (error, results, fields) {
+            if (error)
+                throw error;
+
+            const users = results.map(({ id }) => ({ id }));
+            res.jsonp({ users, datas });
+        };
+        connection.query(`SELECT id FROM my_hw WHERE name="${req.params.user}"`, cb);
+    };
+}
+
+function delete_user_action(connection) {
+    return (req, res) => {
+        const cb = function (error, results, fields) {
+            if (error)
+                throw error;
+
+            const users = results.map(({ id }) => ({ id }));
+            res.jsonp(users);
+        };
+        connection.query(`SELECT id FROM my_hw WHERE name="${req.params.user}"`, cb);
     };
 }
 
@@ -90,27 +121,7 @@ export default connection => express.Router()
     .get( "/", get_action(connection) )
     .post( "/", post_action(connection) )
     .get( "/:user", get_user_action(connection) )
-    .put( "/:user", (req, res) => {
-        const command = `SELECT name, gender, birthdate FROM my_hw WHERE name="${req.params.user}"`;
-        const cb = function (error, results, fields) {
-            if (error)
-                throw error;
-
-            const users = results.map(({ gender, ...rest }) => ({ gender: generate_gender(gender), ...rest }));
-            res.jsonp(users);
-        };
-        connection.query(command, cb);
-    } )
-    .delete( "/:user", (req, res) => {
-        const command = `SELECT name, gender, birthdate FROM my_hw WHERE name="${req.params.user}"`;
-        const cb = function (error, results, fields) {
-            if (error)
-                throw error;
-
-            const users = results.map(({ gender, ...rest }) => ({ gender: generate_gender(gender), ...rest }));
-            res.jsonp(users);
-        };
-        connection.query(command, cb);
-    } )
+    .put( "/:user", put_user_action(connection) )
+    .delete( "/:user", delete_user_action(connection) )
 ;
 

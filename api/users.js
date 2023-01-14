@@ -90,27 +90,32 @@ function put_user_action(connection) {
             birthdate: req.body.birthdate,
             address: req.body.address,
         };
-        const cb = function (error, results, fields) {
-            if (error)
-                throw error;
-
-            const users = results.map(({ id }) => ({ id }));
-            res.jsonp({ users, datas });
-        };
-        connection.query(`SELECT id FROM my_hw WHERE name="${req.params.user}"`, cb);
+        const ajax = new QuerySingleUser(connection, req.params.user);
+        ajax.get_user_by_name(req.params.user).then( (results) => {
+            res.statusCode = results.code;
+            res.jsonp({ results, datas });
+        }).catch( (e) => {
+            res.statusCode = e.code;
+            res.jsonp( e );
+        });
     };
 }
 
 function delete_user_action(connection) {
     return (req, res) => {
-        const cb = function (error, results, fields) {
-            if (error)
-                throw error;
-
-            const users = results.map(({ id }) => ({ id }));
-            res.jsonp(users);
+        const datas = {
+            gender: req.body.gender,
+            birthdate: req.body.birthdate,
+            address: req.body.address,
         };
-        connection.query(`SELECT id FROM my_hw WHERE name="${req.params.user}"`, cb);
+        const ajax = new QuerySingleUser(connection, req.params.user);
+        ajax.get_user_by_name(req.params.user).then( (results) => {
+            res.statusCode = results.code;
+            res.jsonp({ results, datas });
+        }).catch( (e) => {
+            res.statusCode = e.code;
+            res.jsonp( e );
+        });
     };
 }
 

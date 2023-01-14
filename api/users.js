@@ -91,19 +91,13 @@ function put_user_action(connection) {
             address: req.body.address,
         };
         const ajax = new QuerySingleUser(connection, req.params.user);
-        ajax.get_user_by_name(req.params.user).then( (results) => {
-            res.statusCode = results.code;
-            ajax.put_user(datas).then( (action_result) => {
-                res.statusCode = action_result.code;
-                res.jsonp( action_result );
-            }).catch( (error) => {
-                res.statusCode = error.code;
-                res.jsonp( error );
-            })
+        ajax.put_user(datas).then( (action_result) => {
+            res.statusCode = action_result.code;
+            res.jsonp( action_result );
         }).catch( (error) => {
             res.statusCode = error.code;
             res.jsonp( error );
-        });
+        })
     };
 }
 

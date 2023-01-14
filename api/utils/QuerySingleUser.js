@@ -78,7 +78,11 @@ class QuerySingleUser {
             return params;
         };
         /**
-         * `UPDATE `my_hw` SET `name` = 'AAAAAAAAAAAAAAAAA', `birthdate` = '2023-01-01', `gender` = '0', `address` = 'BBBBBBBBBBBBBBB' WHERE `my_hw`.`id` = 17`
+         * Generate sth like this:
+         *
+         * ```sql
+         * UPDATE database SET `name` = 'name', `birthdate` = 'birthdate', `gender` = 'gender', `address` = 'address' WHERE database.`id` = 'id'
+         * ```
          */
         const generate_command = (item = {}) => {
             const not_id_or_name = (property = "id") => ["id", "name"].includes(property) === false;

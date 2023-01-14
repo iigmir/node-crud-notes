@@ -14,5 +14,6 @@ I use:
 ## Steps
 
 1. Import SQL. First import `sql/user.sql` then `sql/my_hw.sql`.
-2. `npm install`
-3. `npm start`
+2. Start SQL
+3. `npm install`
+4. `npm start`

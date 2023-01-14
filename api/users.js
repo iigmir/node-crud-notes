@@ -93,7 +93,12 @@ function put_user_action(connection) {
         const ajax = new QuerySingleUser(connection, req.params.user);
         ajax.get_user_by_name(req.params.user).then( (results) => {
             res.statusCode = results.code;
-            res.jsonp( ajax.put_user(datas) );
+            ajax.put_user(datas).then( (action_result) => {
+                res.jsonp( action_result );
+            }).catch( (error) => {
+                res.statusCode = error.code;
+                res.jsonp( error );
+            })
         }).catch( (error) => {
             res.statusCode = error.code;
             res.jsonp( error );

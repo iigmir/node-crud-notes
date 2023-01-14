@@ -20,7 +20,7 @@ class QuerySingleUser {
      * Generate interface
      * @param {String} message Response message
      * @param {Number} code HTTP status code
-     * @param {Object|Array} data Response datas
+     * @param {Object|Array|null} data Response datas
      * @returns {QsuResponseInterface} Response interface.
     */
     generate_response(code = 500, message = "Error message", results = []) {
@@ -53,7 +53,8 @@ class QuerySingleUser {
                 reject(this.connection);
                 return;
             }
-            this.connection.query(`SELECT * FROM ${this.db} WHERE name="${user}"`, (error, results, fields) => {
+            const command = `SELECT * FROM ${this.db} WHERE name="${user}"`;
+            this.connection.query(command, (error, results, fields) => {
                 if (error) {
                     reject( this.generate_response( 500, "Unknown error", error ) );
                 }
@@ -90,13 +91,24 @@ class QuerySingleUser {
             const item_command = ([property, value]) => `\`${property}\` = ${value}`;
             const map_array = Object.entries( item ).filter( conditions );
             const commands = map_array.map( item_command ).join( "," );
-            return `UPDATE ${this.db} SET ${commands} WHERE ${this.db}.id = ${item.id}`;
+            const result = `UPDATE ${this.db} SET ${commands} WHERE ${this.db}.id = ${item.id}`;
+            return result;
         };
-        return {
-            command: generate_command(
-                generate_params({ gender, birthdate, address, id })
-            )
-        };
+        return new Promise( (resolve, reject) => {
+            this.get_user_by_name(this.name).then( (datas) => {
+                const id = datas.results[0].id ?? null;
+                const command = generate_command( generate_params({ gender, birthdate, address, id }) );
+                this.connection.query( command, (error, result) => {
+                    if (error) {
+                        reject( this.generate_response( 500, "Unknown error when updating data", error ) );
+                    }
+                    resolve( this.generate_response( 200, "OK", result ) );
+                });
+            }).catch( e => {
+                console.log(e);
+                reject(e);
+            });
+        });
     }
 }
 

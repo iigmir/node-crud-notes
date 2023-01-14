@@ -1,12 +1,29 @@
+/**
+ * @typedef {Object} QsuResponseInterface
+ * @property {String} message Response message
+ * @property {Number} code HTTP status code
+ * @property {Object|Array|null} data Response datas
+ */
+
 class QuerySingleUser {
     /**
      * @param {import("mysql").Connection} connection
      * @param {String} name
      */
-    constructor(connection, name = "") {
+    constructor(connection = null, name = "") {
         this.connection = connection;
         this.name = name;
         this.data = [];
+    }
+    /**
+     * Generate interface
+     * @param {String} message Response message
+     * @param {Number} code HTTP status code
+     * @param {Object|Array} data Response datas
+     * @returns {QsuResponseInterface} Response interface.
+    */
+    generate_response(code = 500, message = "Error message", results = []) {
+        return { message, code, results };
     }
     generate_gender_request(input = "non-binary") {
         switch (input) {
@@ -31,12 +48,20 @@ class QuerySingleUser {
     get_user_by_name(input = "") {
         const user = input ?? this.name;
         return new Promise( (resolve, reject) => {
+            if( this.connection == null ) {
+                reject(this.connection);
+                return;
+            }
             this.connection.query(`SELECT * FROM my_hw WHERE name="${user}"`, (error, results, fields) => {
                 if (error) {
-                    reject(error);
+                    reject( this.generate_response( 500, "Unknown error", error ) );
                 }
-                this.data = results;
-                resolve( this.data );
+                if(results.length < 1) {
+                    reject( this.generate_response( 404, "Not found", error ) );
+                }
+                const users = results.map(({ gender, ...rest }) => ({ gender: this.generate_gender_response(gender), ...rest }));
+                this.data = users;
+                resolve( this.generate_response( 200, "OK", this.data ) );
             });
         });
     }

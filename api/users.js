@@ -1,4 +1,5 @@
 import express from "express";
+import QuerySingleUser from "./utils/QuerySingleUser.js";
 
 const generate_gender = (input = 0) => {
     switch (input) {
@@ -71,14 +72,14 @@ const post_action = (connection) => {
 
 const get_user_action = (connection) => {
     return (req, res) => {
-        const cb = function (error, results, fields) {
-            if (error)
-                throw error;
-
-            const users = results.map(({ gender, ...rest }) => ({ gender: generate_gender(gender), ...rest }));
-            res.jsonp(users);
-        };
-        connection.query(`SELECT name, gender, birthdate FROM my_hw WHERE name="${req.params.user}"`, cb);
+        const ajax = new QuerySingleUser(connection, req.params.user);
+        ajax.get_user_by_name(req.params.user).then( (results) => {
+            res.statusCode = results.code;
+            res.jsonp(results);
+        }).catch( (e) => {
+            res.statusCode = e.code;
+            res.jsonp( e );
+        });
     };
 }
 

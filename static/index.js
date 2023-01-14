@@ -1,11 +1,7 @@
 const json_format = r => r.json();
 
-const main = () => {
-    const ajax = fetch("/api").then(json_format);
+const request_list = () => {
     const users = fetch("/api/users").then(json_format);
-    ajax.then( res => {
-        document.querySelector("#main-title").innerText = res.message;
-    });
     users.then( (res = [{ gender: "", name: "", birthdate: "" }]) => {
         const list_items = (their) => {
             const birthdate = new Date(their.birthdate);
@@ -13,6 +9,14 @@ const main = () => {
         };
         document.querySelector("#user-list").innerHTML = res.map( list_items ).join( "" );
     });
+};
+
+const main = () => {
+    const ajax = fetch("/api").then(json_format);
+    ajax.then( res => {
+        document.querySelector("#main-title").innerText = res.message;
+    });
+    request_list();
 };
 
 main();

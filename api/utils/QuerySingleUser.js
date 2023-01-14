@@ -68,7 +68,6 @@ class QuerySingleUser {
         });
     }
     put_user({ gender = 0, birthdate = null, address = null, }) {
-        const id = this.data[0]?.id ?? null;
         const generate_params = ({ gender = 0, birthdate = null, address = null, id = 0 }) => {
             const params = {
                 id: id,
@@ -104,10 +103,23 @@ class QuerySingleUser {
                     }
                     resolve( this.generate_response( 200, "OK", result ) );
                 });
-            }).catch( e => {
-                console.log(e);
-                reject(e);
-            });
+            }).catch( e => reject(e) );
+        });
+    }
+    delete_user() {
+        return new Promise( (resolve, reject) => {
+            const generate_command = (id = null) => {
+                return `DELETE FROM ${this.db} WHERE ${this.db}.\`id\` = ${id}`;
+            };
+            this.get_user_by_name(this.name).then( (datas) => {
+                const command = generate_command( datas.results[0]?.id );
+                this.connection.query( command, (error, result) => {
+                    if (error) {
+                        reject( this.generate_response( 500, "Unknown error when updating data", error ) );
+                    }
+                    resolve( this.generate_response( 200, "OK", result ) );
+                });
+            }).catch( e => reject(e) );
         });
     }
 }

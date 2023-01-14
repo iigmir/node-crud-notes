@@ -85,13 +85,12 @@ const get_user_action = (connection) => {
 
 function put_user_action(connection) {
     return (req, res) => {
-        const datas = {
+        const ajax = new QuerySingleUser(connection, req.params.user);
+        ajax.put_user({
             gender: req.body.gender,
             birthdate: req.body.birthdate,
             address: req.body.address,
-        };
-        const ajax = new QuerySingleUser(connection, req.params.user);
-        ajax.put_user(datas).then( (action_result) => {
+        }).then( (action_result) => {
             res.statusCode = action_result.code;
             res.jsonp( action_result );
         }).catch( (error) => {
@@ -109,13 +108,13 @@ function delete_user_action(connection) {
             address: req.body.address,
         };
         const ajax = new QuerySingleUser(connection, req.params.user);
-        ajax.get_user_by_name(req.params.user).then( (results) => {
-            res.statusCode = results.code;
-            res.jsonp( ajax.put_user(datas) );
-        }).catch( (e) => {
-            res.statusCode = e.code;
-            res.jsonp( e );
-        });
+        ajax.delete_user().then( (action_result) => {
+            res.statusCode = action_result.code;
+            res.jsonp( action_result );
+        }).catch( (error) => {
+            res.statusCode = error.code;
+            res.jsonp( error );
+        })
     };
 }
 

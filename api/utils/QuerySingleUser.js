@@ -46,7 +46,7 @@ class QuerySingleUser {
             default: return "non-binary";
         }
     }
-    get_user_by_name(input = "") {
+    get_user_by_name(input) {
         const user = input ?? this.name;
         return new Promise( (resolve, reject) => {
             if( this.connection == null ) {
